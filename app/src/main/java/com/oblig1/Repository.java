@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -50,13 +49,22 @@ public class Repository {
     pictures.add(picture);
   }
 
+  public static void removePictureByIndex(int index) {
+    pictures.remove(index);
+  }
+
   private static void initializePictures() {
+    // Pictures that we can use in app from startup
     saveImage("https://upload.wikimedia.org/wikipedia/commons/8/82/Damon_cropped.jpg", "damon");
     addPicture(new Picture("damon", "Matt Damon"));
     saveImage("https://upload.wikimedia.org/wikipedia/commons/b/bd/Glasto17-44_%2835547413626%29_Cropped.jpg", "cooper");
     addPicture(new Picture("cooper", "Bradley Cooper"));
     saveImage("https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Kevin_Smith_%2848477230947%29_%28cropped%29.jpg/1024px-Kevin_Smith_%2848477230947%29_%28cropped%29.jpg", "smith");
     addPicture(new Picture("smith", "Kevin Smith"));
+
+    // Pictures we can add to app
+    saveImage("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Tom_Hanks_TIFF_2019.jpg/1024px-Tom_Hanks_TIFF_2019.jpg", "hanks");
+    saveImage("https://upload.wikimedia.org/wikipedia/commons/8/8d/George_Clooney_2016.jpg", "clooney");
   }
 
   private static void saveImage(String url, final String filename) {

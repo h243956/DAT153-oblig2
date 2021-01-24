@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,13 +20,14 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 public class DatabaseRecyclerViewAdapter extends RecyclerView.Adapter<DatabaseRecyclerViewAdapter.ViewHolder> {
-  private static final String TAG = "DatabaseRecyclerViewAda";
 
   private ArrayList<Picture> pictures = new ArrayList<>();
   private Context mContext;
+  private Repository repository;
 
   public DatabaseRecyclerViewAdapter(Context mContext) {
     this.mContext = mContext;
+    this.repository=Repository.getInstance(mContext);
   }
 
   @NonNull
@@ -39,8 +41,6 @@ public class DatabaseRecyclerViewAdapter extends RecyclerView.Adapter<DatabaseRe
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-    Log.d(TAG, "onBindViewHolder: Called");
-
     // get picture name and display
     holder.pictureNameText.setText(pictures.get(position).getName());
 
@@ -50,12 +50,16 @@ public class DatabaseRecyclerViewAdapter extends RecyclerView.Adapter<DatabaseRe
             .load(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + pictures.get(position).getFilename() + ".jpg")
             .into(holder.pictureImageView);
 
-    holder.parent.setOnClickListener(new View.OnClickListener() {
+    holder.removeButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Toast.makeText(mContext, pictures.get(position).getName() + " selected", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, pictures.get(position).getName() + " removed", Toast.LENGTH_SHORT).show();
+        repository.removePictureByIndex(position);
+        pictures=repository.getPictures();
+        notifyDataSetChanged();
       }
     });
+
   }
 
   @Override
@@ -68,19 +72,19 @@ public class DatabaseRecyclerViewAdapter extends RecyclerView.Adapter<DatabaseRe
     notifyDataSetChanged();
   }
 
-
-
   public class ViewHolder extends RecyclerView.ViewHolder {
 
     private CardView parent;
     private ImageView pictureImageView;
     private TextView pictureNameText;
+    private Button removeButton;
 
     public ViewHolder(@NonNull View itemView) {
       super(itemView);
       parent = (CardView) itemView.findViewById(R.id.parent);
       pictureImageView = (ImageView) itemView.findViewById(R.id.pictureImage);
       pictureNameText = (TextView) itemView.findViewById(R.id.pictureText);
+      removeButton = (Button) itemView.findViewById(R.id.removeButton);
     }
 
   }

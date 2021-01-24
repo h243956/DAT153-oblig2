@@ -36,7 +36,6 @@ public class DatabaseActivity extends AppCompatActivity {
 
     adapter = new DatabaseRecyclerViewAdapter(this);
     databaseRecyclerView = (RecyclerView) findViewById(R.id.databaseRecyclerView);
-    Toast.makeText(getApplicationContext(), "creating images", Toast.LENGTH_LONG).show();
 
     databaseRecyclerView.setAdapter(adapter);
     databaseRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
