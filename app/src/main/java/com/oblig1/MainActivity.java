@@ -10,12 +10,15 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
 
   private Button quizButton, databaseButton, addButton;
+  private Repository repository;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     this.initializeView();
+    this.repository=Repository.getInstance(this);
+
 
     databaseButton.setOnClickListener(new View.OnClickListener() {
       @Override

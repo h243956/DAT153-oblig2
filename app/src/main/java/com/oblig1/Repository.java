@@ -1,0 +1,85 @@
+package com.oblig1;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.os.Environment;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+
+/**
+ * For now a static singleton class to be shared throughout the app
+ * Later can be used for db connection
+ * If later we use multiple threads to fetch things, the getInstance needs to be synchronized
+ */
+public class Repository {
+
+  private static Repository instance;
+  private static ArrayList<Picture> pictures;
+  private static Context current_context;
+
+  private Repository() {
+    if(pictures == null) {
+      pictures = new ArrayList<Picture>();
+      initializePictures();
+    }
+  }
+
+  public static Repository getInstance(Context context) {
+    current_context=context;
+    if(instance != null) {
+      return instance;
+    } else {
+      return new Repository();
+    }
+  }
+
+  public static ArrayList<Picture> getPictures() {
+    return pictures;
+  }
+
+  public static void addPicture(Picture picture) {
+    pictures.add(picture);
+  }
+
+  private static void initializePictures() {
+    saveImage("https://upload.wikimedia.org/wikipedia/commons/8/82/Damon_cropped.jpg", "damon");
+    addPicture(new Picture("damon", "Matt Damon"));
+    saveImage("https://upload.wikimedia.org/wikipedia/commons/b/bd/Glasto17-44_%2835547413626%29_Cropped.jpg", "cooper");
+    addPicture(new Picture("cooper", "Bradley Cooper"));
+    saveImage("https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Kevin_Smith_%2848477230947%29_%28cropped%29.jpg/1024px-Kevin_Smith_%2848477230947%29_%28cropped%29.jpg", "smith");
+    addPicture(new Picture("smith", "Kevin Smith"));
+  }
+
+  private static void saveImage(String url, final String filename) {
+    Glide.with(current_context).asBitmap().load(url).into(new CustomTarget<Bitmap>() {
+      @Override
+      public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+        try {
+          File myDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString());
+          if(!myDir.exists()) {
+            myDir.mkdirs();
+          }
+          String fileUri = myDir.getAbsolutePath() + "/" + filename + ".jpg";
+          FileOutputStream outputStream = new FileOutputStream(fileUri);
+          bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+          outputStream.flush();
+          outputStream.close();
+        } catch(IOException e) {
+          e.printStackTrace();
+        }
+      }
+      @Override
+      public void onLoadCleared(Drawable placeholder) {
+      }
+    });
+  }
+}
