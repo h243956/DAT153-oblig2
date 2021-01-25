@@ -45,6 +45,7 @@ public class DatabaseRecyclerViewAdapter extends RecyclerView.Adapter<DatabaseRe
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+
     // get picture name and display
     holder.pictureNameText.setText(pictures.get(position).getName());
 
@@ -54,13 +55,14 @@ public class DatabaseRecyclerViewAdapter extends RecyclerView.Adapter<DatabaseRe
             .load(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + pictures.get(position).getFilename() + ".jpg")
             .into(holder.pictureImageView);
 
+    // put onclick function on removebuttons
     holder.removeButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Toast.makeText(mContext, pictures.get(position).getName() + " removed", Toast.LENGTH_SHORT).show();
         repository.removePictureByIndex(position);
         pictures=repository.getPictures();
         notifyDataSetChanged();
+        Toast.makeText(mContext, pictures.get(position).getName() + " removed", Toast.LENGTH_SHORT).show();
       }
     });
 

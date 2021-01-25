@@ -28,7 +28,6 @@ public class Repository {
 
   private Repository() {
     if(pictures == null) {
-      pictures = new ArrayList<Picture>();
       initializePictures();
     }
   }
@@ -55,6 +54,8 @@ public class Repository {
   }
 
   private static void initializePictures() {
+    pictures = new ArrayList<Picture>();
+
     // Pictures that we can use in app from startup
     saveImage("https://upload.wikimedia.org/wikipedia/commons/8/82/Damon_cropped.jpg", "damon");
     addPicture(new Picture("damon", "Matt Damon"));

@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.AddPictureActivity"></activity>
+        <activity android:name=".activities.QuizActivity"></activity>
+        <activity android:name=".activities.AddPictureActivity" />
         <activity android:name=".activities.DatabaseActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

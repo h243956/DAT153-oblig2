@@ -50,6 +50,6 @@ public class DatabaseActivity extends AppCompatActivity {
     } else {
       return super.onOptionsItemSelected(item);
     }
-
   }
+
 }

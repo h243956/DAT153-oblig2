@@ -3,6 +3,7 @@ package com.oblig1.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -44,6 +46,15 @@ public class AddPictureActivity extends AppCompatActivity {
     fromDeviceImageView = (ImageView) findViewById(R.id.fromDeviceImageView);
     saveFromDeviceButton = (Button) findViewById(R.id.saveFromDeviceButton);
     repository=Repository.getInstance(this);
+
+    nameInputText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+      @Override
+      public void onFocusChange(View v, boolean hasFocus) {
+        if (!hasFocus) {
+          hideKeyboard(v);
+        }
+      }
+    });
 
     addFromDeviceButton.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -113,6 +124,11 @@ public class AddPictureActivity extends AppCompatActivity {
     } else {
       return super.onOptionsItemSelected(item);
     }
+  }
+
+  public void hideKeyboard(View view) {
+    InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
   }
 
 }

@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.oblig1.activities.AddPictureActivity;
 import com.oblig1.activities.DatabaseActivity;
+import com.oblig1.activities.QuizActivity;
 import com.oblig1.repository.Repository;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,6 +39,14 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void onClick(View v) {
         Intent intent = new Intent(MainActivity.this, AddPictureActivity.class);
+        startActivity(intent);
+      }
+    });
+
+    quizButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent intent = new Intent(MainActivity.this, QuizActivity.class);
         startActivity(intent);
       }
     });
