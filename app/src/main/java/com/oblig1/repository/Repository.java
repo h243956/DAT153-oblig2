@@ -1,4 +1,4 @@
-package com.oblig1;
+package com.oblig1.repository;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,6 +8,7 @@ import android.os.Environment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.oblig1.entities.Picture;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -7,18 +7,24 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.oblig1.activities.AddPictureActivity;
+import com.oblig1.activities.DatabaseActivity;
+import com.oblig1.repository.Repository;
+
 public class MainActivity extends AppCompatActivity {
 
   private Button quizButton, databaseButton, addButton;
-  private Repository repository;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     this.initializeView();
-    this.repository=Repository.getInstance(this);
-
+  }
+  private void initializeView() {
+    quizButton = (Button) findViewById(R.id.quizButton);
+    databaseButton = (Button) findViewById(R.id.databaseButton);
+    addButton = (Button) findViewById(R.id.addButton);
 
     databaseButton.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -28,10 +34,12 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-  }
-  private void initializeView() {
-    quizButton = (Button) findViewById(R.id.quizButton);
-    databaseButton = (Button) findViewById(R.id.databaseButton);
-    addButton = (Button) findViewById(R.id.addButton);
+    addButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent intent = new Intent(MainActivity.this, AddPictureActivity.class);
+        startActivity(intent);
+      }
+    });
   }
 }

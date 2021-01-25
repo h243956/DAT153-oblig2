@@ -1,8 +1,7 @@
-package com.oblig1;
+package com.oblig1.views;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +15,23 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.oblig1.entities.Picture;
+import com.oblig1.R;
+import com.oblig1.repository.Repository;
 
 import java.util.ArrayList;
 
 public class DatabaseRecyclerViewAdapter extends RecyclerView.Adapter<DatabaseRecyclerViewAdapter.ViewHolder> {
 
-  private ArrayList<Picture> pictures = new ArrayList<>();
+  private ArrayList<Picture> pictures;
   private Context mContext;
   private Repository repository;
 
   public DatabaseRecyclerViewAdapter(Context mContext) {
     this.mContext = mContext;
     this.repository=Repository.getInstance(mContext);
+    pictures=repository.getPictures();
+    notifyDataSetChanged();
   }
 
   @NonNull
@@ -65,11 +69,6 @@ public class DatabaseRecyclerViewAdapter extends RecyclerView.Adapter<DatabaseRe
   @Override
   public int getItemCount() {
     return pictures.size();
-  }
-
-  public void setPictures(ArrayList<Picture> pictures) {
-    this.pictures = pictures;
-    notifyDataSetChanged();
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {

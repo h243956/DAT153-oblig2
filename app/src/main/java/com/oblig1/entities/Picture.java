@@ -1,4 +1,4 @@
-package com.oblig1;
+package com.oblig1.entities;
 
 public class Picture {
 
