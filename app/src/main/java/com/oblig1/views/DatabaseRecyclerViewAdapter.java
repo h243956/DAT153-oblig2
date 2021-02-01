@@ -2,6 +2,7 @@ package com.oblig1.views;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,8 @@ public class DatabaseRecyclerViewAdapter extends RecyclerView.Adapter<DatabaseRe
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    Log.d("OnBind", "position: " + Integer.toString(position));
+    Log.d("OnBind", "size: " + Integer.toString(pictures.size()));
 
     // get picture name and display
     holder.pictureNameText.setText(pictures.get(position).getName());
@@ -59,13 +62,11 @@ public class DatabaseRecyclerViewAdapter extends RecyclerView.Adapter<DatabaseRe
     holder.removeButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        repository.removePictureByIndex(position);
-        pictures=repository.getPictures();
-        notifyDataSetChanged();
         Toast.makeText(mContext, pictures.get(position).getName() + " removed", Toast.LENGTH_SHORT).show();
+        repository.removePictureByIndex(position);
+        notifyDataSetChanged();
       }
     });
-
   }
 
   @Override

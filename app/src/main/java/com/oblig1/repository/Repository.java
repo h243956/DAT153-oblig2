@@ -1,14 +1,23 @@
 package com.oblig1.repository;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.oblig1.entities.Picture;
+
+import static android.Manifest.permission.INTERNET;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,14 +36,14 @@ public class Repository {
   private static Context current_context;
 
   private Repository() {
-    if(pictures == null) {
+    if (pictures == null) {
       initializePictures();
     }
   }
 
   public static Repository getInstance(Context context) {
-    current_context=context;
-    if(instance != null) {
+    current_context = context;
+    if (instance != null) {
       return instance;
     } else {
       return new Repository();
@@ -75,7 +84,7 @@ public class Repository {
       public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
         try {
           File myDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString());
-          if(!myDir.exists()) {
+          if (!myDir.exists()) {
             myDir.mkdirs();
           }
           String fileUri = myDir.getAbsolutePath() + "/" + filename + ".jpg";
@@ -83,10 +92,11 @@ public class Repository {
           bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
           outputStream.flush();
           outputStream.close();
-        } catch(IOException e) {
+        } catch (IOException e) {
           e.printStackTrace();
         }
       }
+
       @Override
       public void onLoadCleared(Drawable placeholder) {
       }

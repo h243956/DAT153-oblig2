@@ -4,11 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,16 +24,19 @@ import com.oblig1.entities.Picture;
 import com.oblig1.entities.Quiz;
 import com.oblig1.repository.Repository;
 
-import static android.view.inputmethod.EditorInfo.IME_ACTION_DONE;
-
 public class QuizActivity extends AppCompatActivity {
 
   private Quiz quiz;
   private Repository repository;
-  private TextView progressTextView, resultTextView;
-  private Button nextQuizItemButton, finishQuizButton;
+  private TextView progressTextView;
+  private TextView resultTextView;
+  private TextView answerTextView;
+  private Button nextQuizItemButton;
+  private Button stopQuizButton;
+  private Button checkAnswerButton;
   private ImageView quizItemImageView;
   private TextInputEditText answerNameInputText;
+  private Picture currentQuizItem=null;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +70,14 @@ public class QuizActivity extends AppCompatActivity {
     quiz = new Quiz(repository.getPictures());
     progressTextView = (TextView) findViewById(R.id.progressTextView);
     resultTextView = (TextView) findViewById(R.id.resultTextView);
+    answerTextView = (TextView) findViewById(R.id.answerTextView);;
     nextQuizItemButton = (Button) findViewById(R.id.nextQuizItemButton);
-    finishQuizButton = (Button) findViewById(R.id.finishQuizButton);
+    stopQuizButton = (Button) findViewById(R.id.stopQuizButton);
     quizItemImageView = (ImageView) findViewById(R.id.quizItemImageView);
+    checkAnswerButton = (Button) findViewById(R.id.checkAnswerButton);
     answerNameInputText = (TextInputEditText) findViewById(R.id.answerNameInputText);
     progressTextView.setText(quiz.getProgressToString());
+
 
     answerNameInputText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
       @Override
@@ -84,24 +88,38 @@ public class QuizActivity extends AppCompatActivity {
       }
     });
 
-    nextQuizItemButton.setOnClickListener(new View.OnClickListener() {
+    currentQuizItem=quiz.getQuizItem();
+
+    checkAnswerButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        quiz.checkAnswer(answerNameInputText.getText().toString());
-        quiz.incrementCurrentIndex();
+        quiz.incrementAttempts();
+        quiz.checkAnswer(currentQuizItem, answerNameInputText.getText().toString());
+        answerTextView.setText(quiz.getAnswerFeedback());
         progressTextView.setText(quiz.getProgressToString());
         answerNameInputText.setText("");
-        setQuizItemImage();
+        quiz.setState(Quiz.DONE_CHECK);
         handleQuizState();
       }
     });
 
-    finishQuizButton.setOnClickListener(new View.OnClickListener() {
+    nextQuizItemButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        quiz.checkAnswer(answerNameInputText.getText().toString());
+        answerTextView.setVisibility(View.INVISIBLE);
+        answerNameInputText.setText("");
+        currentQuizItem=quiz.getQuizItem();
+        setQuizItemImage();
+        quiz.setState(Quiz.AWAITING_CHECK);
+        handleQuizState();
+      }
+    });
+
+    stopQuizButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
         resultTextView.setText(quiz.getResultsToString());
-        quiz.setRunning(false);
+        quiz.setState(Quiz.STOPPED);
         handleQuizState();
       }
     });
@@ -110,32 +128,43 @@ public class QuizActivity extends AppCompatActivity {
   }
 
   public void handleQuizState() {
-    if(!quiz.isRunning()) {
-      finishQuizButton.setVisibility(View.INVISIBLE);
-      nextQuizItemButton.setVisibility(View.INVISIBLE);
-      progressTextView.setVisibility(View.INVISIBLE);
-      answerNameInputText.setVisibility(View.INVISIBLE);
-      quizItemImageView.setVisibility(View.INVISIBLE);
-      resultTextView.setVisibility(View.VISIBLE);
-    } else {
-      if(quiz.getCurrentIndex() == (quiz.getSize() - 1)) {
+    switch(quiz.getState()) {
+      case Quiz.AWAITING_CHECK:
+        checkAnswerButton.setVisibility(View.VISIBLE);
         nextQuizItemButton.setVisibility(View.INVISIBLE);
-        finishQuizButton.setVisibility(View.VISIBLE);
-      } else {
-        finishQuizButton.setVisibility(View.INVISIBLE);
+        stopQuizButton.setVisibility(View.INVISIBLE);
+        resultTextView.setVisibility(View.INVISIBLE);
+        answerTextView.setVisibility(View.INVISIBLE);
+        quizItemImageView.setVisibility(View.VISIBLE);
+        progressTextView.setVisibility(View.VISIBLE);
+        answerNameInputText.setVisibility(View.VISIBLE);
+        break;
+      case Quiz.DONE_CHECK:
+        checkAnswerButton.setVisibility(View.INVISIBLE);
         nextQuizItemButton.setVisibility(View.VISIBLE);
-      }
-      resultTextView.setVisibility(View.INVISIBLE);
-      quizItemImageView.setVisibility(View.VISIBLE);
-      progressTextView.setVisibility(View.VISIBLE);
-      answerNameInputText.setVisibility(View.VISIBLE);
+        stopQuizButton.setVisibility(View.VISIBLE);
+        resultTextView.setVisibility(View.INVISIBLE);
+        answerTextView.setVisibility(View.VISIBLE);
+        quizItemImageView.setVisibility(View.VISIBLE);
+        progressTextView.setVisibility(View.VISIBLE);
+        answerNameInputText.setVisibility(View.INVISIBLE);
+        break;
+      case Quiz.STOPPED:
+        checkAnswerButton.setVisibility(View.INVISIBLE);
+        answerTextView.setVisibility(View.INVISIBLE);
+        stopQuizButton.setVisibility(View.INVISIBLE);
+        nextQuizItemButton.setVisibility(View.INVISIBLE);
+        progressTextView.setVisibility(View.INVISIBLE);
+        answerNameInputText.setVisibility(View.INVISIBLE);
+        quizItemImageView.setVisibility(View.INVISIBLE);
+        resultTextView.setVisibility(View.VISIBLE);
     }
   }
 
   public void setQuizItemImage() {
     Glide.with(this)
             .asBitmap()
-            .load(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + quiz.getCurrentQuizItem().getFilename() + ".jpg")
+            .load(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + currentQuizItem.getFilename() + ".jpg")
             .into(quizItemImageView);
   }
 

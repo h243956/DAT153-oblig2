@@ -6,43 +6,47 @@ import android.util.Log;
 import com.oblig1.repository.Repository;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Quiz {
 
+  public static final int DONE_CHECK=0, STOPPED=1, AWAITING_CHECK=2;
 
+  private int state;
   private ArrayList<Picture> quizItems;
-  private int currentIndex, countCorrectAnswers, countWrongAnswers, currentState;
+
+  private int attempts, countCorrectAnswers, countWrongAnswers;
   private boolean isRunning;
+  private Random rand;
+  private String answerFeedback;
 
   public Quiz(ArrayList<Picture> pictures) {
-    quizItems=pictures;
+    quizItems = pictures;
+    rand = new Random();
     restart();
   }
 
   public void restart() {
-    currentState = 1;
-    currentIndex = 0;
+    attempts = 0;
     countCorrectAnswers = 0;
     countWrongAnswers = 0;
-    isRunning=true;
+    state=AWAITING_CHECK;
   }
 
   public int getSize() {
     return quizItems.size();
   }
 
-  public boolean checkAnswer(String answerName) {
-    if(quizItems.get(currentIndex).getName().toLowerCase().equals(answerName.toLowerCase())) {
+  public boolean checkAnswer(Picture quizItem, String answerName) {
+    if (quizItem.getName().toLowerCase().equals(answerName.toLowerCase())) {
       countCorrectAnswers++;
+      this.answerFeedback = answerName + " was the correct answer!";
       return true;
     } else {
       countWrongAnswers++;
+      this.answerFeedback = answerName + " was wrong.\nCorrect answer was "+quizItem.getName();
       return false;
     }
-  }
-
-  public int getCurrentIndex() {
-    return currentIndex;
   }
 
   public int getCountCorrectAnswers() {
@@ -53,35 +57,34 @@ public class Quiz {
     return countWrongAnswers;
   }
 
-  public int getCurrentState() {
-    return currentIndex;
+  public void incrementAttempts() {
+    attempts++;
   }
 
-  public void incrementCurrentIndex() {
-    currentIndex++;
-  }
-
-  public Picture getCurrentQuizItem() {
-    return quizItems.get(currentIndex);
-  }
-
-  public boolean isRunning() {
-    return isRunning;
-  }
-
-  public void setRunning(boolean running) {
-    isRunning = running;
+  public Picture getQuizItem() {
+    return quizItems.get(rand.nextInt(quizItems.size()));
   }
 
   public String getResultsToString() {
-    String countAnswers=Integer.toString(getSize());
-    String correctAnswers=Integer.toString(countCorrectAnswers);
-    return "You answered " + correctAnswers + "/" + countAnswers + " correctly!";
+    String attemptsStr = Integer.toString(attempts);
+    String countCorrectStr = Integer.toString(countCorrectAnswers);
+    return "You answered " + countCorrectStr + "/" + attemptsStr + " correctly!";
   }
 
   public String getProgressToString() {
-    String doneQuizItems=Integer.toString(currentIndex+1);
-    String totalQuizItems=Integer.toString(getSize());
-    return "On picture " + doneQuizItems + "/" + totalQuizItems;
+    String countCorrectStr = Integer.toString(countCorrectAnswers);
+    String attemptsStr = Integer.toString(attempts);
+    return "Your score " + countCorrectStr + "/" + attemptsStr;
+  }
+  public String getAnswerFeedback() {
+    return answerFeedback;
+  }
+
+  public int getState() {
+    return state;
+  }
+
+  public void setState(int state) {
+    this.state = state;
   }
 }
