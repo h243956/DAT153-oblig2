@@ -106,7 +106,6 @@ public class QuizActivity extends AppCompatActivity {
     nextQuizItemButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        answerTextView.setVisibility(View.INVISIBLE);
         answerNameInputText.setText("");
         currentQuizItem=quiz.getQuizItem();
         setQuizItemImage();

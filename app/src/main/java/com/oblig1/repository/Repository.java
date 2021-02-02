@@ -24,11 +24,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * For now a static singleton class to be shared throughout the app
- * Later can be used for db connection
- * If later we use multiple threads to fetch things, the getInstance needs to be synchronized
- */
 public class Repository {
 
   private static Repository instance;
@@ -43,11 +38,10 @@ public class Repository {
 
   public static Repository getInstance(Context context) {
     current_context = context;
-    if (instance != null) {
-      return instance;
-    } else {
-      return new Repository();
+    if (instance == null) {
+      instance = new Repository();
     }
+    return instance;
   }
 
   public static ArrayList<Picture> getPictures() {

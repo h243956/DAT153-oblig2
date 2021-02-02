@@ -29,7 +29,8 @@ public class AddPictureActivity extends AppCompatActivity {
   static final int REQUEST_IMAGE_OPEN = 1;
   private String filename="";
   private Repository repository;
-  private Button addFromDeviceButton, saveFromDeviceButton;
+  private Button addFromDeviceButton;
+  private Button saveFromDeviceButton;
   private TextInputEditText nameInputText;
   private ImageView fromDeviceImageView;
 

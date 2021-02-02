@@ -46,19 +46,13 @@ public class DatabaseRecyclerViewAdapter extends RecyclerView.Adapter<DatabaseRe
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-    Log.d("OnBind", "position: " + Integer.toString(position));
-    Log.d("OnBind", "size: " + Integer.toString(pictures.size()));
-
-    // get picture name and display
     holder.pictureNameText.setText(pictures.get(position).getName());
 
-    // get picture file and display
     Glide.with(mContext)
             .asBitmap()
             .load(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + pictures.get(position).getFilename() + ".jpg")
             .into(holder.pictureImageView);
 
-    // put onclick function on removebuttons
     holder.removeButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
