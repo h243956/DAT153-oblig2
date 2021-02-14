@@ -1,34 +1,44 @@
 package com.oblig1.entities;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class Picture {
 
-  private String filename;
-  private String name;
+  @PrimaryKey(autoGenerate = true)
+  private int id;
 
-  public Picture(String filename, String name) {
+  private String name;
+  private String filename;
+
+  public Picture(String name, String filename) {
+    this.name = name;
     this.filename = filename;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
     this.name = name;
   }
 
   public String getFilename() {
-    return this.filename;
+    return filename;
   }
 
   public void setFilename(String filename) {
     this.filename = filename;
   }
 
-  public String getName() {
-    return this.name;
+  public int getId() {
+    return id;
   }
 
-  public void setName(String name) {
-    this.name=name;
+  public void setId(int id) {
+    this.id = id;
   }
-
-  @Override
-  public String toString() {
-    return "Picture { Filename: " + this.filename + ", Name: " + this.name + " }";
-  }
-
 }

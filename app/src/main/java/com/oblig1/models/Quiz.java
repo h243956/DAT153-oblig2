@@ -1,11 +1,13 @@
-package com.oblig1.entities;
+package com.oblig1.models;
 
 import android.content.Context;
 import android.util.Log;
 
+import com.oblig1.entities.Picture;
 import com.oblig1.repository.Repository;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Quiz {
@@ -13,14 +15,13 @@ public class Quiz {
   public static final int DONE_CHECK=0, STOPPED=1, AWAITING_CHECK=2;
 
   private int state;
-  private ArrayList<Picture> quizItems;
-
+  private List<Picture> quizItems;
   private int attempts, countCorrectAnswers, countWrongAnswers;
   private boolean isRunning;
   private Random rand;
   private String answerFeedback;
 
-  public Quiz(ArrayList<Picture> pictures) {
+  public Quiz(List<Picture> pictures) {
     quizItems = pictures;
     rand = new Random();
     restart();

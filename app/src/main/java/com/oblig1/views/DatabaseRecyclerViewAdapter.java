@@ -2,7 +2,6 @@ package com.oblig1.views;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,18 +19,18 @@ import com.oblig1.entities.Picture;
 import com.oblig1.R;
 import com.oblig1.repository.Repository;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseRecyclerViewAdapter extends RecyclerView.Adapter<DatabaseRecyclerViewAdapter.ViewHolder> {
 
-  private ArrayList<Picture> pictures;
+  private List<Picture> pictures;
   private Context mContext;
   private Repository repository;
 
   public DatabaseRecyclerViewAdapter(Context mContext) {
     this.mContext = mContext;
     this.repository=Repository.getInstance(mContext);
-    pictures=repository.getPictures();
+    pictures=repository.pictureDAO().getAllPictures();
     notifyDataSetChanged();
   }
 
@@ -57,7 +56,8 @@ public class DatabaseRecyclerViewAdapter extends RecyclerView.Adapter<DatabaseRe
       @Override
       public void onClick(View v) {
         Toast.makeText(mContext, pictures.get(position).getName() + " removed", Toast.LENGTH_SHORT).show();
-        repository.removePictureByIndex(position);
+        repository.pictureDAO().deletePicture(pictures.get(position));
+        pictures=repository.pictureDAO().getAllPictures();
         notifyDataSetChanged();
       }
     });

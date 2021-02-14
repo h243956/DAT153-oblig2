@@ -21,7 +21,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.oblig1.MainActivity;
 import com.oblig1.R;
 import com.oblig1.entities.Picture;
-import com.oblig1.entities.Quiz;
+import com.oblig1.models.Quiz;
 import com.oblig1.repository.Repository;
 
 public class QuizActivity extends AppCompatActivity {
@@ -67,7 +67,7 @@ public class QuizActivity extends AppCompatActivity {
 
   public void initializeView() {
     repository = Repository.getInstance(this);
-    quiz = new Quiz(repository.getPictures());
+    quiz = new Quiz(repository.pictureDAO().getAllPictures());
     progressTextView = (TextView) findViewById(R.id.progressTextView);
     resultTextView = (TextView) findViewById(R.id.resultTextView);
     answerTextView = (TextView) findViewById(R.id.answerTextView);;

@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.oblig1.activities.AddPictureActivity;
 import com.oblig1.activities.DatabaseActivity;
 import com.oblig1.activities.QuizActivity;
+import com.oblig1.repository.Repository;
 
 import static android.Manifest.permission.INTERNET;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -66,8 +67,12 @@ public class MainActivity extends AppCompatActivity {
     quizButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Intent intent = new Intent(MainActivity.this, QuizActivity.class);
-        startActivity(intent);
+        if(Repository.getInstance(getApplicationContext()).pictureDAO().getAllPictures().isEmpty()) {
+          Toast.makeText(getApplicationContext(), "Add an item to the database to start quiz", Toast.LENGTH_SHORT).show();
+        } else {
+          Intent intent = new Intent(MainActivity.this, QuizActivity.class);
+          startActivity(intent);
+        }
       }
     });
   }

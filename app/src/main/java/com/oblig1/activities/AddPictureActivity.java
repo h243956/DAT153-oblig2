@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
@@ -16,12 +18,15 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputEditText;
 import com.oblig1.MainActivity;
 import com.oblig1.entities.Picture;
 import com.oblig1.R;
+import com.oblig1.exceptions.DataValidationException;
+import com.oblig1.handler.Handler;
 import com.oblig1.repository.Repository;
 
 public class AddPictureActivity extends AppCompatActivity {
@@ -29,10 +34,13 @@ public class AddPictureActivity extends AppCompatActivity {
   static final int REQUEST_IMAGE_OPEN = 1;
   private String filename="";
   private Repository repository;
+  private Handler handler;
   private Button addFromDeviceButton;
   private Button saveFromDeviceButton;
   private TextInputEditText nameInputText;
   private ImageView fromDeviceImageView;
+  private Bitmap imageBitmap;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +54,8 @@ public class AddPictureActivity extends AppCompatActivity {
     nameInputText = (TextInputEditText) findViewById(R.id.nameInputText);
     fromDeviceImageView = (ImageView) findViewById(R.id.fromDeviceImageView);
     saveFromDeviceButton = (Button) findViewById(R.id.saveFromDeviceButton);
-    repository=Repository.getInstance(this);
+    repository = Repository.getInstance(this);
+    handler = new Handler(getApplicationContext());
 
     nameInputText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
       @Override
@@ -70,9 +79,13 @@ public class AddPictureActivity extends AppCompatActivity {
     saveFromDeviceButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        repository.addPicture(new Picture(filename, nameInputText.getText().toString()));
-        Intent intent = new Intent(AddPictureActivity.this, DatabaseActivity.class);
-        startActivity(intent);
+        try {
+          handler.savePicture(nameInputText.getText().toString(), filename);
+          Intent intent = new Intent(AddPictureActivity.this, DatabaseActivity.class);
+          startActivity(intent);
+        } catch (DataValidationException e) {
+          Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
       }
     });
   }
