@@ -2,6 +2,9 @@
 
 <h3>Initial wireframes</h3>
 <img src="wireframes_oblig1.jpg" title="wireframes">
+<h3>Test results with Gradle tool</h3>
+<img src="tests_1.jpg" title="wireframes">
+<img src="tests_2.jpg" title="wireframes">
 <h3>Project description</h3>
 <p>This little app should help us to learn the names of our classmates (or a random selection of cute cat pictures): it maintains a list names with an associated picture to each name. There are three core activities, which the user should be able to choose from when the application starts:</p>
 <ul>
