@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,6 +16,9 @@ import android.view.MenuItem;
 import com.oblig1.MainActivity;
 import com.oblig1.R;
 import com.oblig1.views.DatabaseRecyclerViewAdapter;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 public class DatabaseActivity extends AppCompatActivity {
 
@@ -51,5 +56,7 @@ public class DatabaseActivity extends AppCompatActivity {
       return super.onOptionsItemSelected(item);
     }
   }
+
+
 
 }

@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -96,7 +97,6 @@ public class AddPictureActivity extends AppCompatActivity {
     if (requestCode == REQUEST_IMAGE_OPEN && resultCode == RESULT_OK) {
       Uri uri = data.getData();
       setFilenameFromUri(uri);
-
       Glide.with(this)
               .asBitmap()
               .load(uri)
@@ -114,10 +114,14 @@ public class AddPictureActivity extends AppCompatActivity {
 
   public void setFilenameFromUri(Uri uri) {
     Cursor returnCursor = getContentResolver().query(uri, null, null, null, null);
-    int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-    returnCursor.moveToFirst();
-    String filenameWithExtension = returnCursor.getString(nameIndex);
-    filename = filenameWithExtension.substring(0, filenameWithExtension.lastIndexOf('.'));
+    if(returnCursor == null) {
+      filename="hanks";
+    } else {
+      int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+      returnCursor.moveToFirst();
+      String filenameWithExtension = returnCursor.getString(nameIndex);
+      filename = filenameWithExtension.substring(0, filenameWithExtension.lastIndexOf('.'));
+    }
   }
 
   @Override
