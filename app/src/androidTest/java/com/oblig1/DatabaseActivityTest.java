@@ -76,6 +76,16 @@ public class DatabaseActivityTest {
     return adapter.getItemCount();
   }
 
+  @Before
+  public void setup() {
+    Intents.init();
+  }
+
+  @After
+  public void teardown() {
+    Intents.release();
+  }
+
   @Test
   public void removeItemFromDatabaseTest() {
     int countItemsBefore = this.getItemCount();
@@ -86,16 +96,6 @@ public class DatabaseActivityTest {
       int expectedCount = countItemsBefore - 1;
       onView(withId(R.id.databaseRecyclerView)).check(matches(hasChildCount(expectedCount)));
     }
-  }
-
-  @Before
-  public void setup() {
-    Intents.init();
-  }
-
-  @After
-  public void teardown() {
-    Intents.release();
   }
 
   @Test
@@ -111,6 +111,11 @@ public class DatabaseActivityTest {
 
     int exceptedItemsCount = countItemsBefore + 1;
     onView(withId(R.id.databaseRecyclerView)).check(matches(hasChildCount(exceptedItemsCount)));
+
+    TestViewActions testViewAction = new TestViewActions();
+
+    onView(withId(R.id.databaseRecyclerView))
+            .perform(RecyclerViewActions.actionOnItemAtPosition(exceptedItemsCount-1, testViewAction.clickChildViewWithId(R.id.removeButton)));
   }
 
   public Instrumentation.ActivityResult createPictureResultStub(Activity activity) {
