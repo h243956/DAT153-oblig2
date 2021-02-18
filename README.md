@@ -3,6 +3,8 @@
 <h3>Initial wireframes</h3>
 <img src="wireframes_oblig1.jpg" title="wireframes">
 <h3>Test results with Gradle tool</h3>
+<p>There are two types of tests, local unit tests and instrumented tests. Gradle interpretes the test type based on it's namespace/location. Local Unit tests runs on your machine's local JVM. Instrumented tests run on a hardware device or emulator, and have access to Instrumentation APIs which gives you access to control the app under test from your test code. These tests are built into an own APK, separately from your APP's APK, and therefore Gradle also creates a separate AndroidManifest.xml file which you can modify specifically for testing.
+</p>
 <img src="tests_1.jpg" title="wireframes">
 <img src="tests_2.jpg" title="wireframes">
 <h3>Project description</h3>
